@@ -2,7 +2,7 @@
 
 A planner for Vintage Story farming. The Decision Helper ranks all 18 crops for your specific plot. The Calendar shows what fits before frost. Plot tracker, fertilizer math, climate curve from your own server. Built for VS 1.22.1 with optional Specialized Classes 2.2.2 support.
 
-> **Try it now:** [LIVE-URL] (replace with your GitHub Pages URL once deployed)
+> **Try it now:** **https://garrethcline.github.io/vs-farming/**
 >
 > **Or download the spreadsheet:** [`farming_dashboard.xlsx`](./farming_dashboard.xlsx) (works in Excel, LibreOffice, or Google Sheets)
 
