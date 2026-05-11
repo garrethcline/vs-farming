@@ -1,0 +1,431 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ───────── Theme tokens ─────────
+   Light mode is the default. Dark mode overrides via [data-theme="dark"].
+   Aesthetic for dark: candlelit field journal at night. Deep forest, warm
+   cream, amber accents. Not pure black/white; keep the warmth.
+*/
+:root {
+  --bg-page: #FAF5E8;
+  --bg-page-overlay-1: rgba(74, 124, 89, 0.06);
+  --bg-page-overlay-2: rgba(188, 71, 73, 0.04);
+
+  --bg-card: rgba(250, 245, 232, 0.90);
+  --bg-card-elevated: rgba(253, 250, 241, 0.95);
+  --border-card: rgba(237, 226, 199, 0.6);
+  --border-card-strong: rgba(237, 226, 199, 0.8);
+
+  --text-primary: #2C2A29;
+  --text-secondary: #4A4742;
+  --text-muted: #66615C;
+  --text-faint: #8A857F;
+
+  --accent-primary: #1B4332;
+  --accent-secondary: #2D6A4F;
+  --accent-tertiary: #40916C;
+  --accent-warm: #BC4749;
+  --accent-amber: #DDA15E;
+
+  --chart-text: #5C5854;
+  --chart-axis: #C7BAA0;
+  --chart-grid: #DDD0B6;
+  --chart-tooltip-bg: #FDFAF1;
+  --chart-tooltip-border: #C7BAA0;
+  --chart-tooltip-shadow: rgba(60, 50, 35, 0.12);
+
+  --input-bg: #FDFAF1;
+  --input-border: rgba(221, 208, 182, 0.6);
+  --input-text: #2C2A29;
+  --input-placeholder: #9C968F;
+
+  --scrollbar-thumb: rgba(221, 208, 182, 0.5);
+  --scrollbar-thumb-hover: rgba(199, 186, 160, 0.7);
+
+  --shadow-paper: 0 1px 2px rgba(60, 50, 35, 0.05), 0 4px 12px rgba(60, 50, 35, 0.04);
+  --shadow-paper-lg: 0 2px 4px rgba(60, 50, 35, 0.06), 0 12px 32px rgba(60, 50, 35, 0.06);
+
+  --hr-color: #7A6E5C;
+}
+
+[data-theme="dark"] {
+  --bg-page: #141C18;
+  --bg-page-overlay-1: rgba(116, 198, 157, 0.05);
+  --bg-page-overlay-2: rgba(221, 161, 94, 0.04);
+
+  --bg-card: rgba(28, 41, 33, 0.85);
+  --bg-card-elevated: rgba(34, 49, 40, 0.92);
+  --border-card: rgba(82, 121, 111, 0.35);
+  --border-card-strong: rgba(82, 121, 111, 0.55);
+
+  --text-primary: #EDE2C7;
+  --text-secondary: #D5C9AC;
+  --text-muted: #BFAF8E;
+  --text-faint: #978B70;
+
+  --accent-primary: #95D5B2;
+  --accent-secondary: #74C69D;
+  --accent-tertiary: #52B788;
+  --accent-warm: #E48580;
+  --accent-amber: #E5B580;
+
+  --chart-text: #C7BAA0;
+  --chart-axis: #5C5040;
+  --chart-grid: rgba(82, 121, 111, 0.25);
+  --chart-tooltip-bg: #1F2D26;
+  --chart-tooltip-border: #52796F;
+  --chart-tooltip-shadow: rgba(0, 0, 0, 0.4);
+
+  --input-bg: rgba(20, 28, 24, 0.6);
+  --input-border: rgba(82, 121, 111, 0.4);
+  --input-text: #EDE2C7;
+  --input-placeholder: #7A6E5C;
+
+  --scrollbar-thumb: rgba(82, 121, 111, 0.4);
+  --scrollbar-thumb-hover: rgba(116, 165, 127, 0.6);
+
+  --shadow-paper: 0 1px 3px rgba(0, 0, 0, 0.3), 0 6px 16px rgba(0, 0, 0, 0.25);
+  --shadow-paper-lg: 0 2px 6px rgba(0, 0, 0, 0.35), 0 16px 40px rgba(0, 0, 0, 0.3);
+
+  --hr-color: #52796F;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    color: var(--text-primary);
+    background-color: var(--bg-page);
+    background-image:
+      radial-gradient(ellipse at top right, var(--bg-page-overlay-1) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom left, var(--bg-page-overlay-2) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.4 0 0 0 0 0.36 0 0 0 0 0.28 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-attachment: fixed, fixed, fixed;
+    background-size: auto, auto, 200px 200px;
+    min-height: 100vh;
+    transition: background-color 220ms ease, color 220ms ease;
+  }
+
+  /* Note: do NOT use a body::before pseudo with mix-blend-mode for grain.
+     mix-blend-mode creates a stacking context that breaks SVG rendering
+     inside Recharts. Grain is layered into the body background-image stack. */
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+    font-feature-settings: "ss01", "ss02", "ss03";
+  }
+
+  .font-display {
+    font-feature-settings: "ss01", "ss02", "ss03";
+    font-variation-settings: "opsz" 30, "SOFT" 50, "WONK" 1;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  .card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow-paper);
+    @apply backdrop-blur-sm;
+  }
+
+  .card-elevated {
+    background-color: var(--bg-card-elevated);
+    border: 1px solid var(--border-card-strong);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow-paper-lg);
+    @apply backdrop-blur-sm;
+  }
+
+  .section-eyebrow {
+    @apply text-xs uppercase tracking-[0.2em] font-medium font-sans;
+    color: var(--accent-tertiary);
+  }
+
+  .heading-display {
+    @apply font-display leading-[0.95];
+    color: var(--accent-primary);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+  }
+
+  .heading-italic {
+    @apply font-display italic;
+    color: var(--accent-secondary);
+    font-variation-settings: "opsz" 60;
+  }
+
+  .pill-mod {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-100 border border-amber-300 text-amber-900;
+  }
+  [data-theme="dark"] .pill-mod {
+    background-color: rgba(221, 161, 94, 0.15);
+    border-color: rgba(221, 161, 94, 0.4);
+    color: #E5B580;
+  }
+
+  .ornament {
+    @apply flex items-center justify-center my-8;
+    color: var(--text-muted);
+  }
+  .ornament::before, .ornament::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, currentColor, transparent);
+    opacity: 0.3;
+  }
+  .ornament > * {
+    @apply mx-4 text-base;
+  }
+
+  .tab-btn {
+    @apply px-4 py-2 font-sans text-sm font-medium tracking-wide transition-all duration-200;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+  }
+  .tab-btn:hover {
+    color: var(--accent-secondary);
+  }
+
+  .tab-btn.active {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-tertiary);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md font-sans font-medium text-sm tracking-wide transition-colors duration-150;
+    background-color: var(--accent-primary);
+    color: var(--bg-page);
+    box-shadow: var(--shadow-paper);
+  }
+  .btn-primary:hover {
+    background-color: var(--accent-secondary);
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md font-sans font-medium text-sm tracking-wide transition-colors duration-150;
+    border: 1px solid var(--accent-tertiary);
+    color: var(--accent-secondary);
+  }
+  .btn-secondary:hover {
+    background-color: rgba(64, 145, 108, 0.08);
+  }
+
+  .input-field {
+    @apply w-full px-3 py-2 text-sm rounded-md font-sans transition-all duration-150;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--input-text);
+  }
+  .input-field::placeholder {
+    color: var(--input-placeholder);
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: var(--accent-tertiary);
+    box-shadow: 0 0 0 2px rgba(64, 145, 108, 0.2);
+  }
+
+  .select-field {
+    @apply input-field appearance-none cursor-pointer pr-8;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%237A7570' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+  }
+  [data-theme="dark"] .select-field {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23A89B82' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover);
+  }
+}
+
+/* Recharts overrides */
+.recharts-text {
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 11px !important;
+  fill: var(--chart-text) !important;
+}
+
+.recharts-cartesian-axis-tick-line,
+.recharts-cartesian-axis-line {
+  stroke: var(--chart-axis) !important;
+}
+
+.recharts-cartesian-grid line {
+  stroke: var(--chart-grid) !important;
+  stroke-dasharray: 2 4;
+  opacity: 0.7;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
+
+.recharts-default-tooltip {
+  background: var(--chart-tooltip-bg) !important;
+  border: 1px solid var(--chart-tooltip-border) !important;
+  border-radius: 6px !important;
+  font-family: 'Manrope', sans-serif !important;
+  box-shadow: 0 4px 12px var(--chart-tooltip-shadow) !important;
+  padding: 8px 12px !important;
+  color: var(--text-primary) !important;
+}
+[data-theme="dark"] .recharts-default-tooltip,
+[data-theme="dark"] .recharts-default-tooltip * {
+  color: #EDE2C7 !important;
+}
+
+.flourish-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+  color: var(--hr-color);
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.5em;
+}
+.flourish-divider::before, .flourish-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  max-width: 100px;
+  margin: 0 1rem;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+}
+
+/* Dark-mode overrides for Tailwind utility classes used inline.
+   These map the parchment/forest/ink/terra utilities to dark equivalents
+   without requiring rewrites of every component.
+   IMPORTANT: every opacity-modified variant in use (e.g. /30, /50, /80) needs
+   its own override, because Tailwind generates each as a separate class. */
+
+/* parchment- (the cream-paper backgrounds become dark forest backgrounds) */
+[data-theme="dark"] .bg-parchment-50 { background-color: rgba(34, 49, 40, 0.6) !important; }
+[data-theme="dark"] .bg-parchment-50\/30,
+[data-theme="dark"] .bg-parchment-50\/50 { background-color: rgba(34, 49, 40, 0.4) !important; }
+[data-theme="dark"] .bg-parchment-100 { background-color: rgba(28, 41, 33, 0.8) !important; }
+[data-theme="dark"] .bg-parchment-100\/80,
+[data-theme="dark"] .bg-parchment-100\/90,
+[data-theme="dark"] .bg-parchment-100\/95 { background-color: rgba(28, 41, 33, 0.85) !important; }
+[data-theme="dark"] .bg-parchment-200 { background-color: rgba(40, 56, 47, 0.7) !important; }
+[data-theme="dark"] .bg-parchment-200\/20,
+[data-theme="dark"] .bg-parchment-200\/30,
+[data-theme="dark"] .bg-parchment-200\/40,
+[data-theme="dark"] .bg-parchment-200\/50,
+[data-theme="dark"] .bg-parchment-200\/60 { background-color: rgba(40, 56, 47, 0.35) !important; }
+[data-theme="dark"] .bg-parchment-300 { background-color: rgba(46, 64, 53, 0.7) !important; }
+[data-theme="dark"] .bg-parchment-300\/30,
+[data-theme="dark"] .bg-parchment-300\/40,
+[data-theme="dark"] .bg-parchment-300\/50 { background-color: rgba(46, 64, 53, 0.35) !important; }
+
+/* forest- (highlight callouts, success states) */
+[data-theme="dark"] .bg-forest-50 { background-color: rgba(116, 198, 157, 0.05) !important; }
+[data-theme="dark"] .bg-forest-50\/30,
+[data-theme="dark"] .bg-forest-50\/40,
+[data-theme="dark"] .bg-forest-50\/50 { background-color: rgba(116, 198, 157, 0.05) !important; }
+/* /60 is used for selected radio cards; needs to stand out clearly */
+[data-theme="dark"] .bg-forest-50\/60 { background-color: rgba(82, 183, 136, 0.18) !important; }
+[data-theme="dark"] .bg-forest-100 { background-color: rgba(116, 198, 157, 0.08) !important; }
+[data-theme="dark"] .bg-forest-100\/30 { background-color: rgba(116, 198, 157, 0.06) !important; }
+[data-theme="dark"] .bg-forest-200 { background-color: rgba(116, 198, 157, 0.12) !important; }
+[data-theme="dark"] .bg-forest-200\/60 { background-color: rgba(116, 198, 157, 0.10) !important; }
+[data-theme="dark"] .bg-forest-300\/80 { background-color: rgba(82, 183, 136, 0.25) !important; }
+[data-theme="dark"] .bg-forest-400\/85 { background-color: rgba(82, 183, 136, 0.55) !important; }
+
+/* amber- (warning callouts, [MOD] tags, attention chips) */
+[data-theme="dark"] .bg-amber-50 { background-color: rgba(221, 161, 94, 0.08) !important; }
+[data-theme="dark"] .bg-amber-50\/40,
+[data-theme="dark"] .bg-amber-50\/50 { background-color: rgba(221, 161, 94, 0.08) !important; }
+[data-theme="dark"] .bg-amber-100 { background-color: rgba(221, 161, 94, 0.12) !important; }
+[data-theme="dark"] .bg-amber-100\/15,
+[data-theme="dark"] .bg-amber-100\/20,
+[data-theme="dark"] .bg-amber-100\/30,
+[data-theme="dark"] .bg-amber-100\/40,
+[data-theme="dark"] .bg-amber-100\/50 { background-color: rgba(221, 161, 94, 0.10) !important; }
+[data-theme="dark"] .bg-amber-100\/60 { background-color: rgba(221, 161, 94, 0.14) !important; }
+[data-theme="dark"] .bg-amber-200\/60 { background-color: rgba(221, 161, 94, 0.18) !important; }
+[data-theme="dark"] .bg-amber-300\/10 { background-color: rgba(221, 161, 94, 0.08) !important; }
+[data-theme="dark"] .bg-amber-300\/15 { background-color: rgba(221, 161, 94, 0.10) !important; }
+[data-theme="dark"] .bg-amber-300\/40 { background-color: rgba(221, 161, 94, 0.18) !important; }
+[data-theme="dark"] .bg-amber-300\/60 { background-color: rgba(221, 161, 94, 0.25) !important; }
+[data-theme="dark"] .bg-amber-300\/70 { background-color: rgba(221, 161, 94, 0.32) !important; }
+
+/* terra- (cold/heat damage, error states) */
+[data-theme="dark"] .bg-terra-50\/40 { background-color: rgba(228, 133, 128, 0.08) !important; }
+[data-theme="dark"] .bg-terra-300\/15 { background-color: rgba(228, 133, 128, 0.10) !important; }
+[data-theme="dark"] .bg-terra-300\/30 { background-color: rgba(228, 133, 128, 0.18) !important; }
+[data-theme="dark"] .bg-terra-300\/60 { background-color: rgba(228, 133, 128, 0.30) !important; }
+[data-theme="dark"] .bg-terra-300\/70 { background-color: rgba(228, 133, 128, 0.35) !important; }
+[data-theme="dark"] .bg-terra-700\/40,
+[data-theme="dark"] .bg-terra-700\/50 { background-color: rgba(168, 73, 70, 0.32) !important; }
+
+/* parchment- additional opacity variants */
+[data-theme="dark"] .bg-parchment-100\/30 { background-color: rgba(28, 41, 33, 0.5) !important; }
+[data-theme="dark"] .bg-parchment-100\/40,
+[data-theme="dark"] .bg-parchment-100\/50,
+[data-theme="dark"] .bg-parchment-100\/60 { background-color: rgba(28, 41, 33, 0.6) !important; }
+
+[data-theme="dark"] .border-parchment-200,
+[data-theme="dark"] .border-parchment-300,
+[data-theme="dark"] .border-parchment-400 { border-color: rgba(82, 121, 111, 0.35) !important; }
+[data-theme="dark"] .border-parchment-300\/30,
+[data-theme="dark"] .border-parchment-300\/40,
+[data-theme="dark"] .border-parchment-300\/60,
+[data-theme="dark"] .border-parchment-300\/80 { border-color: rgba(82, 121, 111, 0.25) !important; }
+[data-theme="dark"] .border-parchment-400\/60 { border-color: rgba(82, 121, 111, 0.3) !important; }
+
+[data-theme="dark"] .text-ink-900,
+[data-theme="dark"] .text-ink-800 { color: #EDE2C7 !important; }
+[data-theme="dark"] .text-ink-700 { color: #D5C9AC !important; }
+[data-theme="dark"] .text-ink-600 { color: #C7BAA0 !important; }
+[data-theme="dark"] .text-ink-500 { color: #BFAF8E !important; }
+[data-theme="dark"] .text-ink-400 { color: #978B70 !important; }
+
+[data-theme="dark"] .text-forest-950,
+[data-theme="dark"] .text-forest-900 { color: #95D5B2 !important; }
+[data-theme="dark"] .text-forest-800 { color: #74C69D !important; }
+[data-theme="dark"] .text-forest-700 { color: #52B788 !important; }
+[data-theme="dark"] .text-forest-600 { color: #74A57F !important; }
+
+[data-theme="dark"] .text-terra-700,
+[data-theme="dark"] .text-terra-600 { color: #E48580 !important; }
+
+[data-theme="dark"] code {
+  background-color: rgba(82, 121, 111, 0.18) !important;
+  color: #C7BAA0 !important;
+}
+
+/* Selected radio card: visible in both themes via solid bg, not opacity tint.
+   Light: warm parchment with forest border. Dark: muted forest with light text. */
+.satiety-card { background-color: transparent; }
+.satiety-card-selected {
+  background-color: #DDF2E5;
+}
+[data-theme="dark"] .satiety-card-selected {
+  background-color: rgba(82, 183, 136, 0.22) !important;
+}
